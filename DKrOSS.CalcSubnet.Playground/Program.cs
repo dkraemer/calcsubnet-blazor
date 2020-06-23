@@ -2,11 +2,18 @@
 
 namespace DKrOSS.CalcSubnet.Playground
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            foreach (IDumpable subnetMask in SubnetMask.AllSubnetMasks())
+            {
+                Console.WriteLine(subnetMask.Dump());
+            }
+
+
+            Console.Write("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }

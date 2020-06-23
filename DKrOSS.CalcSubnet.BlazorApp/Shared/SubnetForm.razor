@@ -1,0 +1,54 @@
+﻿<form>
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            <label for="ipaddress">IP address</label>
+            <input id="ipaddress" type="text" class="form-control" placeholder="aaa.bbb.ccc.ddd"/>
+        </div>
+        <div class="col-auto">
+            <label for="subnetbits">Network bits</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">/</div>
+                </div>
+                <select id="subnetbits" class="custom-select" @bind="SelectedNetworkBitCount">
+                    @foreach (var subnetMask in SubnetMasks)
+                    {
+                        <option value="@subnetMask.NetwortBitCount">@subnetMask.NetwortBitCount</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-auto">
+            <label for="subnetmask">Subnet mask</label>
+            <select id="subnetmask" class="custom-select" @bind="SelectedNetworkBitCount">
+                @foreach (var subnetMask in SubnetMasks)
+                {
+                    <option value="@subnetMask.NetwortBitCount">@subnetMask.ToString()</option>
+                }
+            </select>
+        </div>
+        <div class="col-auto">
+            <label for="useableHosts">Address count</label>
+            <select id="useableHosts" class="custom-select" @bind="SelectedNetworkBitCount">
+                @foreach (var subnetMask in SubnetMasks)
+                {
+                    <option value="@subnetMask.NetwortBitCount">@subnetMask.HostCount</option>
+                }
+            </select>
+        </div>
+    </div>
+</form>
+
+@code
+{
+    private byte SelectedNetworkBitCount { get; set; }
+    private IReadOnlyList<SubnetMask> SubnetMasks { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        SelectedNetworkBitCount = 30;
+        SubnetMasks = SubnetMask.AllSubnetMasks();
+
+        return base.OnInitializedAsync();
+    }
+}

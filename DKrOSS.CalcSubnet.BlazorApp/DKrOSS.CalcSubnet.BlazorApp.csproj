@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DKrOSS.CalcSubnet\DKrOSS.CalcSubnet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Watch Include="wwwroot\css\*.css" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,17 @@
-﻿#blazor-error-ui {
+﻿header {
+    background: #5C2D91;
+    color: whitesmoke;
+    padding: 0.75rem 1.25rem 0.75rem 1.25rem;
+    margin: 0 0 1rem 0;
+}
+
+.btn-reload {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+#blazor-error-ui {
     background: lightyellow;
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
@@ -10,9 +23,9 @@
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
