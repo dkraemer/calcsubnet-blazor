@@ -1,0 +1,33 @@
+﻿<div class="border rounded p-2 @VisibilityCss">
+    <div class="col-auto">
+        <label for="si-ipaddress">IP address</label>
+        <span id="si-ipaddress" class="input-group">@IpAddress?.ToDotDecimalString()</span>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public uint? IpAddress
+    {
+        get => _ipAddress;
+        set
+        {
+            VisibilityCss = value != null ? VisibleCssClass : InvisibleCssClass;
+            _ipAddress = value;
+        }
+    }
+
+    [Parameter]
+    public SubnetMask SubnetMask { get; set; }
+
+
+
+
+        private const string VisibleCssClass = "visible border-primary";
+        private const string InvisibleCssClass = "invisible";
+
+    private uint? _ipAddress;
+    private string VisibilityCss { get; set; } = InvisibleCssClass;
+}

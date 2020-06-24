@@ -7,14 +7,14 @@ namespace DKrOSS.CalcSubnet
     {
         private static readonly Regex DotDecimalRegex = new Regex(@"^(?<A>\d{1,3})\.(?<B>\d{1,3})\.(?<C>\d{1,3})\.(?<D>\d{1,3})$");
 
-        public static bool TryParse(object dotDecimalString, out uint parsedValue)
+        public static bool TryParse(object dotDecimalString, out uint? parsedValue)
         {
             return TryParse(dotDecimalString.ToString().Trim(), out parsedValue);
         }
 
-        public static bool TryParse(string dotDecimalString, out uint parsedValue)
+        public static bool TryParse(string dotDecimalString, out uint? parsedValue)
         {
-            parsedValue = 0;
+            parsedValue = null;
 
             var match = DotDecimalRegex.Match(dotDecimalString);
             if (!match.Success)

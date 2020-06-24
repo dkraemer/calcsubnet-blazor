@@ -3,28 +3,18 @@
     public abstract class DotDecimal : IDumpable
     {
         public const byte ValueBitCount = 32;
-
-        private string _dotDecimalString;
-        private uint _value;
-
-        public uint Value
-        {
-            get => _value;
-            protected set
-            {
-                _value = value;
-                _dotDecimalString = value.ToDotDecimalString();
-            }
-        }
+        public uint Value { get; protected set; }
 
         public override string ToString()
         {
-            return _dotDecimalString;
+            return Value.ToDotDecimalString();
         }
 
-        public virtual string Dump()
+        public static implicit operator uint(DotDecimal obj)
         {
-            return $"Value: {_dotDecimalString}";
+            return obj.Value;
         }
+
+        public abstract string Dump();
     }
 }

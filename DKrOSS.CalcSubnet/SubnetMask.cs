@@ -8,18 +8,14 @@ namespace DKrOSS.CalcSubnet
     {
         public const byte MaxNetworkBitCount = 32;
 
-        public byte NetwortBitCount { get; }
-        public byte HostBitCount { get; }
-        public ulong HostAddressCount { get; }
-        public ulong UsableHostAddressCount { get; }
-        public string HostAddressRemark { get; }
-
         public SubnetMask(byte networkBitCount)
         {
             const string argName = nameof(networkBitCount);
             if (networkBitCount > MaxNetworkBitCount)
             {
-                throw new ArgumentOutOfRangeException(argName,$"Argument {argName} must be less or equal {MaxNetworkBitCount}.");
+                throw new ArgumentOutOfRangeException(
+                    argName,
+                    $"Argument {argName} must be less or equal {MaxNetworkBitCount}.");
             }
 
             NetwortBitCount = networkBitCount;
@@ -50,21 +46,29 @@ namespace DKrOSS.CalcSubnet
             }
         }
 
+        public byte NetwortBitCount { get; }
+        public byte HostBitCount { get; }
+        public ulong HostAddressCount { get; }
+        public ulong UsableHostAddressCount { get; }
+        public string HostAddressRemark { get; }
+
         public override string Dump()
         {
             var hostAddressRemark = HostAddressRemark.Length > 0 ? HostAddressRemark : "<unset>";
 
             var sb = new StringBuilder();
-            sb.AppendLine(base.Dump());
-            sb.AppendLine($"NetworkBitCount: {NetwortBitCount}");
-            sb.AppendLine($"HostBitCount: {HostBitCount}");
-            sb.AppendLine($"HostAddressCount: {HostAddressCount}");
-            sb.AppendLine($"HostAddressRemark: {hostAddressRemark}");
-            sb.AppendLine($"UsableHostAddressCount: {UsableHostAddressCount}");
+            sb.AppendLine($"Subnet mask: {Value}");
+            sb.AppendLine($"Network bits: {NetwortBitCount}");
+            sb.AppendLine($"Host bits: {HostBitCount}");
+            sb.AppendLine($"Host addresses: {HostAddressCount}");
+            sb.AppendLine($"Host addresses remark: {hostAddressRemark}");
+            sb.AppendLine($"Usable host address: {UsableHostAddressCount}");
             return sb.ToString();
         }
 
-        public static IReadOnlyList<SubnetMask> AllSubnetMasks(byte startNetworkBitCount = 30, byte endNetworkBitCount = 8)
+        public static IReadOnlyList<SubnetMask> AllSubnetMasks(
+            byte startNetworkBitCount = 30,
+            byte endNetworkBitCount = 8)
         {
             var subnetMasks = new List<SubnetMask>(MaxNetworkBitCount);
 
