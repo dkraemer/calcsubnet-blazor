@@ -4,7 +4,7 @@
         <div class="col-auto">
             <label for="ipaddress">IP address</label>
             <div class="input-group">
-                <input id="ipaddress" type="text" class="form-control @ValidMarker" @oninput="OnInputIpAddress" placeholder="192.168.255.254"/>
+                <input id="ipaddress" type="text" class="form-control @CssIpAddress" @oninput="OnInputIpAddress" placeholder="192.168.255.254"/>
             </div>
         </div>
         <div class="col-auto">
@@ -51,30 +51,35 @@
 {
     private byte SelectedNetworkBitCount { get; set; }
     private IReadOnlyList<SubnetMask> SubnetMasks { get; set; }
-    private string ValidMarker { get; set; }
+    private string CssIpAddress { get; set; }
 
     private static readonly Regex IpAddressRegex = new Regex(@"^(?<A>\d{1,3})\.(?<B>\d{1,3})\.(?<C>\d{1,3})\.(?<D>\d{1,3})$");
 
-    private bool IsValid
+    private bool _isIpAddressValid;
+
+    private bool IsIpAddressValid
     {
-        set => ValidMarker = value ? "is-valid" : "is-invalid";
+        get => _isIpAddressValid;
+        set
+        {
+            _isIpAddressValid = value;
+            CssIpAddress = value ? "is-valid" : "is-invalid";
+        }
     }
 
     private string Debug { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        IsValid = false;
+        IsIpAddressValid = false;
         SelectedNetworkBitCount = 24;
         SubnetMasks = SubnetMask.AllSubnetMasks();
         return base.OnInitializedAsync();
     }
 
-
-
     private void OnInputIpAddress(ChangeEventArgs e)
     {
-        IsValid = false;
+        IsIpAddressValid = false;
         var input = e.Value.ToString().Trim();
 
         var match = IpAddressRegex.Match(input);
@@ -83,7 +88,7 @@
             return;
         }
 
-        if(!byte.TryParse(match.Groups["A"].Value, out var octetA))
+        if (!byte.TryParse(match.Groups["A"].Value, out var octetA))
         {
             return;
         }
@@ -100,16 +105,8 @@
             return;
         }
 
+    //Debug = $"{octetA}.{octetB}.{octetC}.{octetD}";
 
-        Debug = $"{octetA}.{octetB}.{octetC}.{octetD}";
-
-
-
-
-
-
-        IsValid = true;
-
+        IsIpAddressValid = true;
     }
-
 }
