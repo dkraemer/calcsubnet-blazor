@@ -6,7 +6,7 @@ namespace DKrOSS.CalcSubnet.Playground
     {
         private static void Main(string[] args)
         {
-            foreach (IDumpable subnetMask in SubnetMask.AllSubnetMasks())
+            foreach (IDumpable subnetMask in SubnetMask.AllSubnetMasks(32,0))
             {
                 Console.WriteLine(subnetMask.Dump());
             }

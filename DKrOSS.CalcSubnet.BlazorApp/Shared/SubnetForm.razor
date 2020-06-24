@@ -1,8 +1,11 @@
-﻿<form>
+﻿@using System.Text.RegularExpressions
+<form class="border rounded p-2">
     <div class="form-row align-items-center">
         <div class="col-auto">
             <label for="ipaddress">IP address</label>
-            <input id="ipaddress" type="text" class="form-control" placeholder="aaa.bbb.ccc.ddd"/>
+            <div class="input-group">
+                <input id="ipaddress" type="text" class="form-control @ValidMarker" @oninput="OnInputIpAddress" placeholder="192.168.255.254"/>
+            </div>
         </div>
         <div class="col-auto">
             <label for="subnetbits">Network bits</label>
@@ -20,35 +23,93 @@
         </div>
         <div class="col-auto">
             <label for="subnetmask">Subnet mask</label>
-            <select id="subnetmask" class="custom-select" @bind="SelectedNetworkBitCount">
-                @foreach (var subnetMask in SubnetMasks)
-                {
-                    <option value="@subnetMask.NetwortBitCount">@subnetMask.ToString()</option>
-                }
-            </select>
+            <div class="input-group">
+                <select id="subnetmask" class="custom-select" @bind="SelectedNetworkBitCount">
+                    @foreach (var subnetMask in SubnetMasks)
+                    {
+                        <option value="@subnetMask.NetwortBitCount">@subnetMask.ToString()</option>
+                    }
+                </select>
+            </div>
         </div>
         <div class="col-auto">
-            <label for="useableHosts">Address count</label>
-            <select id="useableHosts" class="custom-select" @bind="SelectedNetworkBitCount">
-                @foreach (var subnetMask in SubnetMasks)
-                {
-                    <option value="@subnetMask.NetwortBitCount">@subnetMask.HostCount</option>
-                }
-            </select>
+            <label for="useableHosts">Usable addresses</label>
+            <div class="input-group">
+                <select id="useableHosts" class="custom-select" @bind="SelectedNetworkBitCount">
+                    @foreach (var subnetMask in SubnetMasks)
+                    {
+                        <option value="@subnetMask.NetwortBitCount">@subnetMask.UsableHostAddressCount @subnetMask.HostAddressRemark</option>
+                    }
+                </select>
+            </div>
         </div>
     </div>
+    @Debug
 </form>
 
 @code
 {
     private byte SelectedNetworkBitCount { get; set; }
     private IReadOnlyList<SubnetMask> SubnetMasks { get; set; }
+    private string ValidMarker { get; set; }
+
+    private static readonly Regex IpAddressRegex = new Regex(@"^(?<A>\d{1,3})\.(?<B>\d{1,3})\.(?<C>\d{1,3})\.(?<D>\d{1,3})$");
+
+    private bool IsValid
+    {
+        set => ValidMarker = value ? "is-valid" : "is-invalid";
+    }
+
+    private string Debug { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        SelectedNetworkBitCount = 30;
+        IsValid = false;
+        SelectedNetworkBitCount = 24;
         SubnetMasks = SubnetMask.AllSubnetMasks();
-
         return base.OnInitializedAsync();
     }
+
+
+
+    private void OnInputIpAddress(ChangeEventArgs e)
+    {
+        IsValid = false;
+        var input = e.Value.ToString().Trim();
+
+        var match = IpAddressRegex.Match(input);
+        if (!match.Success)
+        {
+            return;
+        }
+
+        if(!byte.TryParse(match.Groups["A"].Value, out var octetA))
+        {
+            return;
+        }
+        if (!byte.TryParse(match.Groups["B"].Value, out var octetB))
+        {
+            return;
+        }
+        if (!byte.TryParse(match.Groups["C"].Value, out var octetC))
+        {
+            return;
+        }
+        if (!byte.TryParse(match.Groups["D"].Value, out var octetD))
+        {
+            return;
+        }
+
+
+        Debug = $"{octetA}.{octetB}.{octetC}.{octetD}";
+
+
+
+
+
+
+        IsValid = true;
+
+    }
+
 }
