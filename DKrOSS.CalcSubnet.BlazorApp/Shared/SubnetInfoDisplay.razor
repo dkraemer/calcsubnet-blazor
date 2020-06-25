@@ -4,14 +4,31 @@ All rights reserved.
 Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 -->
 
-    <div class="border rounded p-2">
+<div class="border rounded p-2">
+    <div class="form-row align-items-center">
         <div class="col-auto">
-            <label for="sid-ip-address">IP address</label>
-            <span id="sid-ip-address" class="input-group">@SubnetInfo?.IpAddress</span>
+            <label for="sid-network-address">Network address</label>
+            <div class="input-group">
+                <input id="sid-network-address" class="form-control" type="text" value="@SubnetInfo?.NetworkAddress" readonly />
+            </div>
         </div>
         <div class="col-auto">
-            <label for="sid-subnet-mask">Subnet mask</label>
-            <span id="sid-subnet-mask" class="input-group">@SubnetInfo?.SubnetMask</span>
+            <label for="sid-first-address">First address</label>
+            <div class="input-group">
+                <input id="sid-first-address" class="form-control" type="text" value="@SubnetInfo?.FirstAddress" readonly />
+            </div>
         </div>
-        
+        <div class="col-auto">
+            <label for="sid-last-address">Last address</label>
+            <div class="input-group">
+                <input id="sid-last-address" class="form-control" type="text" value="@SubnetInfo?.LastAddress" readonly />
+            </div>
+        </div>
+        <div class="col-auto">
+            <label for="sid-broadcast-address">Broadcast address</label>
+            <div class="input-group">
+                <input id="sid-broadcast-address" class="form-control" type="text" value="@SubnetInfo?.BroadcastAddress" readonly />
+            </div>
+        </div>
     </div>
+</div>
