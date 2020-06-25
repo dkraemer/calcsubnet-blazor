@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2020, Daniel Kraemer
+// All rights reserved.
+// Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,25 +10,16 @@ namespace DKrOSS.CalcSubnet
 {
     public class SubnetMask : DotDecimal
     {
-        public const byte MaxNetworkBitCount = 32;
+        public const byte MaxPrefixLength = 32;
 
-        public SubnetMask(byte networkBitCount)
+        private SubnetMask(uint? subnetMask, byte prefixLength, byte hostBitCount) : base(subnetMask)
         {
-            const string argName = nameof(networkBitCount);
-            if (networkBitCount > MaxNetworkBitCount)
-            {
-                throw new ArgumentOutOfRangeException(
-                    argName,
-                    $"Argument {argName} must be less or equal {MaxNetworkBitCount}.");
-            }
-
-            NetwortBitCount = networkBitCount;
-            HostBitCount = (byte) (ValueBitCount - networkBitCount);
-            Value = uint.MaxValue << HostBitCount;
-            HostAddressCount = (ulong) Math.Pow(2, HostBitCount);
+            PrefixLength = prefixLength;
+            HostBitCount = hostBitCount;
+            HostAddressCount = (ulong) Math.Pow(2, hostBitCount);
             UsableHostAddressCount = HostAddressCount - 2;
 
-            switch (networkBitCount)
+            switch (prefixLength)
             {
                 case 32:
                     HostAddressRemark = "(Host route)";
@@ -46,7 +41,7 @@ namespace DKrOSS.CalcSubnet
             }
         }
 
-        public byte NetwortBitCount { get; }
+        public byte PrefixLength { get; }
         public byte HostBitCount { get; }
         public ulong HostAddressCount { get; }
         public ulong UsableHostAddressCount { get; }
@@ -54,11 +49,11 @@ namespace DKrOSS.CalcSubnet
 
         public override string Dump()
         {
-            var hostAddressRemark = HostAddressRemark.Length > 0 ? HostAddressRemark : "<unset>";
+            var hostAddressRemark = HostAddressRemark.Length > 0 ? HostAddressRemark : null;
 
             var sb = new StringBuilder();
-            sb.AppendLine($"Subnet mask: {Value}");
-            sb.AppendLine($"Network bits: {NetwortBitCount}");
+            sb.AppendLine($"Subnet mask: {ToString()}");
+            sb.AppendLine($"Prefix length: {PrefixLength}");
             sb.AppendLine($"Host bits: {HostBitCount}");
             sb.AppendLine($"Host addresses: {HostAddressCount}");
             sb.AppendLine($"Host addresses remark: {hostAddressRemark}");
@@ -66,25 +61,40 @@ namespace DKrOSS.CalcSubnet
             return sb.ToString();
         }
 
-        public static IReadOnlyList<SubnetMask> AllSubnetMasks(
-            byte startNetworkBitCount = 30,
-            byte endNetworkBitCount = 8)
+        public static IReadOnlyList<SubnetMask> GetAll(
+            byte startPrefixLength = 30,
+            byte endPrefixLength = 8)
         {
-            var subnetMasks = new List<SubnetMask>(MaxNetworkBitCount);
+            var subnetMasks = new List<SubnetMask>(MaxPrefixLength);
 
-            var networkBitCount = startNetworkBitCount;
+            var prefixLength = startPrefixLength;
             while (true)
             {
-                subnetMasks.Add(new SubnetMask(networkBitCount));
-                if (networkBitCount == endNetworkBitCount)
+                subnetMasks.Add(Create(prefixLength));
+                if (prefixLength == endPrefixLength)
                 {
                     break;
                 }
 
-                networkBitCount--;
+                prefixLength--;
             }
 
             return subnetMasks;
+        }
+
+        public static SubnetMask Create(byte prefixLength)
+        {
+            const string argName = nameof(prefixLength);
+            if (prefixLength > MaxPrefixLength)
+            {
+                throw new ArgumentOutOfRangeException(
+                    argName,
+                    $"Argument {argName} must be less or equal {MaxPrefixLength}.");
+            }
+
+            var hostBitCount = (byte) (MaxPrefixLength - prefixLength);
+            var value = prefixLength == 0 ? 0 : uint.MaxValue << hostBitCount;
+            return new SubnetMask(value, prefixLength, hostBitCount);
         }
     }
 }

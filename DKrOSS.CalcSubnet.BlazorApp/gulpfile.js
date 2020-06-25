@@ -1,4 +1,8 @@
-﻿const gulp = require('gulp');
+﻿// Copyright (c) 2020, Daniel Kraemer
+// All rights reserved.
+// Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
+
+const gulp = require('gulp');
 
 const vendorCss = [
     'node_modules/bootstrap/dist/css/bootstrap.css',

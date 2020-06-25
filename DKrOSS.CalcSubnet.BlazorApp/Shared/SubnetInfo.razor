@@ -1,4 +1,12 @@
-﻿<div class="border rounded p-2 @VisibilityCss">
+﻿<!--
+Copyright (c) 2020, Daniel Kraemer
+All rights reserved.
+Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
+-->
+
+@using DKrOSS.CalcSubnet.Extensions
+
+<div class="border rounded p-2 @VisibilityCss">
     <div class="col-auto">
         <label for="si-ipaddress">IP address</label>
         <span id="si-ipaddress" class="input-group">@IpAddress?.ToDotDecimalString()</span>

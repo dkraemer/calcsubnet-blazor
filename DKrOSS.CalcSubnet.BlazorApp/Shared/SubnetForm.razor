@@ -1,4 +1,11 @@
-﻿<form class="border rounded p-2">
+﻿<!--
+Copyright (c) 2020, Daniel Kraemer
+All rights reserved.
+Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
+-->
+
+@using DKrOSS.CalcSubnet.BlazorApp.Extensions
+<form class="border rounded p-2">
     <div class="form-row align-items-center">
         <div class="col-auto">
             <label for="ipaddress">IP address</label>
@@ -15,7 +22,7 @@
                 <select id="subnetbits" class="custom-select" @bind="SelectedNetworkBitCount">
                     @foreach (var subnetMask in SubnetMasks)
                     {
-                        <option value="@subnetMask.NetwortBitCount">@subnetMask.NetwortBitCount</option>
+                        <option value="@subnetMask.PrefixLength">@subnetMask.PrefixLength</option>
                     }
                 </select>
             </div>
@@ -26,7 +33,7 @@
                 <select id="subnetmask" class="custom-select" @bind="SelectedNetworkBitCount">
                     @foreach (var subnetMask in SubnetMasks)
                     {
-                        <option value="@subnetMask.NetwortBitCount">@subnetMask.ToString()</option>
+                        <option value="@subnetMask.PrefixLength">@subnetMask.ToString()</option>
                     }
                 </select>
             </div>
@@ -37,7 +44,7 @@
                 <select id="useableHosts" class="custom-select" @bind="SelectedNetworkBitCount">
                     @foreach (var subnetMask in SubnetMasks)
                     {
-                        <option value="@subnetMask.NetwortBitCount">@subnetMask.UsableHostAddressCount @subnetMask.HostAddressRemark</option>
+                        <option value="@subnetMask.PrefixLength">@subnetMask.UsableHostAddressCount @subnetMask.HostAddressRemark</option>
                     }
                 </select>
             </div>
@@ -64,13 +71,13 @@
     {
         InputIpAddressCss = InvalidInputCssClass;
         SelectedNetworkBitCount = 24;
-        SubnetMasks = SubnetMask.AllSubnetMasks();
+        SubnetMasks = SubnetMask.GetAll();
         return base.OnInitializedAsync();
     }
 
     private Task OnInputIpAddress(ChangeEventArgs e)
     {
-        var isIpAddressValid = DotDecimalUtils.TryParse(e.Value, out var parsedIpAddress);
+        var isIpAddressValid = e.TryParseDotDecimal(out var parsedIpAddress);
         IpAddress = parsedIpAddress;
 
         InputIpAddressCss = !isIpAddressValid ? InvalidInputCssClass : ValidInputCssClass;

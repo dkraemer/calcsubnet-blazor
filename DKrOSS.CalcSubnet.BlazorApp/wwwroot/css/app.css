@@ -1,4 +1,10 @@
-﻿header {
+﻿/*!
+ * Copyright (c) 2020, Daniel Kraemer
+ * All rights reserved.
+ * Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
+ */
+
+header {
     background: #5C2D91;
     color: whitesmoke;
     padding: 0.75rem 1.25rem 0.75rem 1.25rem;
