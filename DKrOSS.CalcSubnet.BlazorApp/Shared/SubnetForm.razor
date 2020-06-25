@@ -7,19 +7,19 @@ Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/
 <form class="border rounded p-2">
     <div class="form-row align-items-center">
         <div class="col-auto">
-            <label for="ipaddress">IP address</label>
+            <label for="ip-address">IP address</label>
             <div class="input-group">
-                <input id="ipaddress" type="text" class="form-control @InputIpAddressCss" @oninput="OnInputIpAddress" placeholder="192.168.255.254"/>
+                <input id="ip-address" type="text" class="form-control @_inputIpAddressCssClass" @oninput="OnInputIpAddress" placeholder="Please enter address..."/>
             </div>
         </div>
         <div class="col-auto">
-            <label for="subnetbits">Network bits</label>
+            <label for="prefix-length">Prefix length</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="input-group-text">/</div>
                 </div>
-                <select id="subnetbits" class="custom-select" @bind="SelectedNetworkBitCount">
-                    @foreach (var subnetMask in SubnetMasks)
+                <select id="prefix-length" class="custom-select" @bind="SelectedPrefixLength">
+                    @foreach (var subnetMask in _subnetMasks)
                     {
                         <option value="@subnetMask.PrefixLength">@subnetMask.PrefixLength</option>
                     }
@@ -27,10 +27,10 @@ Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/
             </div>
         </div>
         <div class="col-auto">
-            <label for="subnetmask">Subnet mask</label>
+            <label for="subnet-mask">Subnet mask</label>
             <div class="input-group">
-                <select id="subnetmask" class="custom-select" @bind="SelectedNetworkBitCount">
-                    @foreach (var subnetMask in SubnetMasks)
+                <select id="subnet-mask" class="custom-select" @bind="SelectedPrefixLength">
+                    @foreach (var subnetMask in _subnetMasks)
                     {
                         <option value="@subnetMask.PrefixLength">@subnetMask.ToString()</option>
                     }
@@ -38,10 +38,10 @@ Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/
             </div>
         </div>
         <div class="col-auto">
-            <label for="useableHosts">Usable addresses</label>
+            <label for="useable-host-address-count">Usable addresses</label>
             <div class="input-group">
-                <select id="useableHosts" class="custom-select" @bind="SelectedNetworkBitCount">
-                    @foreach (var subnetMask in SubnetMasks)
+                <select id="useable-host-address-count" class="custom-select" @bind="SelectedPrefixLength">
+                    @foreach (var subnetMask in _subnetMasks)
                     {
                         <option value="@subnetMask.PrefixLength">@subnetMask.UsableHostAddressCount @subnetMask.HostAddressRemark</option>
                     }

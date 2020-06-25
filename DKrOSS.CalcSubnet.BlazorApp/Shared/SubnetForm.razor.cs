@@ -14,32 +14,57 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
         private const string ValidInputCssClass = "is-valid";
         private const string InvalidInputCssClass = "is-invalid";
 
-        private string InputIpAddressCss { get; set; }
-        private byte SelectedNetworkBitCount { get; set; }
-        private IReadOnlyList<SubnetMask> SubnetMasks { get; set; }
+        private string _inputIpAddressCssClass;
+
+        private byte SelectedPrefixLength
+        {
+            get => _selectedPrefixLength;
+            set
+            {
+                _selectedPrefixLength = value;
+                SubnetMask = SubnetMask.Create(value);
+                SubnetMaskChanged.InvokeAsync(SubnetMask);
+            }
+        }
+
+        private IReadOnlyList<SubnetMask> _subnetMasks;
+        private byte _selectedPrefixLength;
 
         [Parameter]
-        public uint? IpAddress { get; set; }
+        public IpAddress IpAddress { get; set; }
 
         [Parameter]
-        public EventCallback<uint?> IpAddressChanged { get; set; }
+        public EventCallback<IpAddress> IpAddressChanged { get; set; }
+
+        [Parameter]
+        public SubnetMask SubnetMask { get; set; }
+
+        [Parameter]
+        public EventCallback<SubnetMask> SubnetMaskChanged { get; set; }
 
         protected override Task OnInitializedAsync()
         {
-            InputIpAddressCss = InvalidInputCssClass;
-            SelectedNetworkBitCount = 24;
-            SubnetMasks = SubnetMask.GetAll();
+            _inputIpAddressCssClass = InvalidInputCssClass;
+            SelectedPrefixLength = 24;
+            _subnetMasks = SubnetMask.GetAll();
             return base.OnInitializedAsync();
         }
 
-        private Task OnInputIpAddress(ChangeEventArgs e)
+        private async Task OnInputIpAddress(ChangeEventArgs e)
         {
             var isIpAddressValid = e.TryParseDotDecimal(out var parsedIpAddress);
-            IpAddress = parsedIpAddress;
 
-            InputIpAddressCss = !isIpAddressValid ? InvalidInputCssClass : ValidInputCssClass;
+            if (!isIpAddressValid)
+            {
+                _inputIpAddressCssClass = InvalidInputCssClass;
+                return;
+            }
 
-            return IpAddressChanged.InvokeAsync(IpAddress);
+            IpAddress = new IpAddress(parsedIpAddress);
+            await IpAddressChanged.InvokeAsync(IpAddress);
+            _inputIpAddressCssClass = ValidInputCssClass;
         }
+
+        
     }
 }

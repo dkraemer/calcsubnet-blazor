@@ -6,6 +6,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
     public partial class MainLayout
     {
-        private uint? ipAddress;
+        private IpAddress _ipAddress;
+        private SubnetMask _subnetMask;
     }
 }
