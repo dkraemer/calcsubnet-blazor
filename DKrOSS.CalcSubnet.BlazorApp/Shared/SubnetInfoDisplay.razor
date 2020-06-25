@@ -1,13 +1,17 @@
-﻿@using DKrOSS.CalcSubnet.Extensions
-<!--
+﻿<!--
 Copyright (c) 2020, Daniel Kraemer
 All rights reserved.
 Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 -->
 
-<div class="border rounded p-2 @VisibilityCss">
-    <div class="col-auto">
-        <label for="si-ipaddress">IP address</label>
-        <span id="si-ipaddress" class="input-group">@IpAddress?.ToDotDecimalString()</span>
+    <div class="border rounded p-2">
+        <div class="col-auto">
+            <label for="sid-ip-address">IP address</label>
+            <span id="sid-ip-address" class="input-group">@SubnetInfo?.IpAddress</span>
+        </div>
+        <div class="col-auto">
+            <label for="sid-subnet-mask">Subnet mask</label>
+            <span id="sid-subnet-mask" class="input-group">@SubnetInfo?.SubnetMask</span>
+        </div>
+        
     </div>
-</div>

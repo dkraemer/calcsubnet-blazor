@@ -53,18 +53,9 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
         private async Task OnInputIpAddress(ChangeEventArgs e)
         {
             var isIpAddressValid = e.TryParseDotDecimal(out var parsedIpAddress);
-
-            if (!isIpAddressValid)
-            {
-                _inputIpAddressCssClass = InvalidInputCssClass;
-                return;
-            }
-
-            IpAddress = new IpAddress(parsedIpAddress);
+            _inputIpAddressCssClass = isIpAddressValid ? ValidInputCssClass : InvalidInputCssClass;
+            IpAddress = isIpAddressValid ? new IpAddress(parsedIpAddress) : null;
             await IpAddressChanged.InvokeAsync(IpAddress);
-            _inputIpAddressCssClass = ValidInputCssClass;
         }
-
-        
     }
 }

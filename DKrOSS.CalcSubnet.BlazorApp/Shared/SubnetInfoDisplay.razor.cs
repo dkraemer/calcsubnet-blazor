@@ -3,29 +3,75 @@
 // Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 
 using Microsoft.AspNetCore.Components;
+using System;
+using System.Threading.Tasks;
 
 namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
     public partial class SubnetInfoDisplay
     {
+        private IpAddress _ipAddress;
+        private SubnetMask _subnetMask;
+
         [Parameter]
-        public uint? IpAddress
+        public IpAddress IpAddress
         {
             get => _ipAddress;
             set
             {
-                VisibilityCss = value != null ? VisibleCssClass : InvisibleCssClass;
+                if(value == _ipAddress)
+                {
+                    return;
+                }
+
                 _ipAddress = value;
+                MakeSubnetInfo();
             }
         }
 
         [Parameter]
-        public SubnetMask SubnetMask { get; set; }
+        public SubnetMask SubnetMask
+        {
+            get => _subnetMask;
+            set
+            {
+                if(value == _subnetMask)
+                {
+                    return;
+                }
 
-        private const string VisibleCssClass = "visible border-primary";
-        private const string InvisibleCssClass = "invisible";
+                _subnetMask = value;
+                MakeSubnetInfo();
+            }
+        }
 
-        private uint? _ipAddress;
-        private string VisibilityCss { get; set; } = InvisibleCssClass;
+        [Parameter]
+        public SubnetInfo SubnetInfo { get; set; }
+
+        [Parameter]
+        public EventCallback<IpAddress> IpAddressChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<SubnetMask> SubnetMaskChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<SubnetInfo> SubnetInfoChanged { get; set; }
+
+        private void MakeSubnetInfo()
+        {
+            try
+            {
+                SubnetInfo = new SubnetInfo(IpAddress, SubnetMask);
+            }
+            catch(Exception)
+            {
+                SubnetInfo = null;
+            }
+
+            if (SubnetInfoChanged.HasDelegate)
+            {
+                   SubnetInfoChanged.InvokeAsync(SubnetInfo);
+            }
+        }
     }
 }

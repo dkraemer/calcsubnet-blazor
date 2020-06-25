@@ -2,11 +2,16 @@
 // All rights reserved.
 // Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 
+using Microsoft.AspNetCore.Components;
+
 namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
     public partial class MainLayout
     {
         private IpAddress _ipAddress;
         private SubnetMask _subnetMask;
+        private SubnetInfo _subnetInfo;
+        
+
     }
 }
