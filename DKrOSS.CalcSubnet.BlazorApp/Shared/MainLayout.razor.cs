@@ -2,22 +2,17 @@
 // All rights reserved.
 // Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 
-using Microsoft.AspNetCore.Components.Web;
+using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
     public partial class MainLayout
     {
-#pragma warning disable 169
-        private IpAddress _ipAddress;
-        private SubnetMask _subnetMask;
-        private SubnetInfo _subnetInfo;
-        private string _message;
-#pragma warning restore 169
-
-        private void ShowMessage(MouseEventArgs e)
+        protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            _message = $"Message! X:{e.ScreenX} Y:{e.ScreenY}";
+            JsRuntime.InvokeVoidAsync("enableToolTips");
+            return base.OnAfterRenderAsync(firstRender);
         }
     }
 }
