@@ -7,8 +7,19 @@
 @inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-lg-center">
-        <SubnetCalculator />
+<div class="container bg-default">
+    <div class="row align-items-lg-center">
+        <div class="col header light-on-dark text-center">
+            <span class="fa fa-calculator display-3">&nbsp;</span>
+            <span class="display-3">calcsub.net</span>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-lg-center">
+        <SubnetCalculator/>
+    </div>
+    <div class="row align-items-lg-end">
+        <div class="col text-right">
+            <span class="badge badge-secondary">Version x.x.x-dev</span>
+        </div>
     </div>
 </div>
