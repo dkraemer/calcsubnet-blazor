@@ -6,38 +6,41 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DKrOSS.CalcSubnet.BlazorApp.Extensions;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
+    [UsedImplicitly]
     public partial class SubnetCalculator
     {
         private const string ValidInputCssClass = "is-valid";
         private const string InvalidInputCssClass = "is-invalid";
 
         private string _inputIpAddressCssClass;
-
         private IReadOnlyList<SubnetMask> _subnetMasks;
         private byte _selectedPrefixLength;
-
         private IpAddress _ipAddress;
         private SubnetMask _subnetMask;
-        private bool _isButtonDisabled = true;
 
-        public byte SelectedPrefixLength
+        // Prevent warning CS0414: The field 'SubnetCalculator._isButtonDisabled' is assigned but its value is never used.
+        // _isButtonDisabled is used in button sid-btn-generate-list.
+#pragma warning disable 414
+        private bool _isButtonDisabled;
+#pragma warning restore 414
+
+        private byte SelectedPrefixLength
         {
             get => _selectedPrefixLength;
             set
             {
                 _selectedPrefixLength = value;
                 SubnetMask = SubnetMask.Create(value);
-                //SubnetMaskChanged.InvokeAsync(SubnetMask);
             }
         }
 
-        [Parameter]
-        public IpAddress IpAddress
+        private IpAddress IpAddress
         {
             get => _ipAddress;
             set
@@ -52,8 +55,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
             }
         }
 
-        [Parameter]
-        public SubnetMask SubnetMask
+        private SubnetMask SubnetMask
         {
             get => _subnetMask;
             set
@@ -68,20 +70,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
             }
         }
 
-        [Parameter]
-        public SubnetInfo SubnetInfo { get; set; }
-
-        //[Parameter]
-        //public EventCallback<IpAddress> IpAddressChanged { get; set; }
-
-        //[Parameter]
-        //public EventCallback<SubnetMask> SubnetMaskChanged { get; set; }
-
-        //[Parameter]
-        //public EventCallback<SubnetInfo> SubnetInfoChanged { get; set; }
-
-        //[Parameter]
-        //public EventCallback<MouseEventArgs> OnClickButtonGenerateList { get; set; }
+        private SubnetInfo SubnetInfo { get; set; }
 
         protected override Task OnInitializedAsync()
         {
@@ -91,19 +80,16 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
             return base.OnInitializedAsync();
         }
 
-        private async Task OnInputIpAddress(ChangeEventArgs e)
+        private void OnInputIpAddress(ChangeEventArgs e)
         {
             var isIpAddressValid = e.TryParseDotDecimal(out var parsedIpAddress);
             _inputIpAddressCssClass = isIpAddressValid ? ValidInputCssClass : InvalidInputCssClass;
             IpAddress = isIpAddressValid ? new IpAddress(parsedIpAddress) : null;
-            //await IpAddressChanged.InvokeAsync(IpAddress);
         }
 
-        private async Task OnClickButtonGenerateList(MouseEventArgs e)
+        private void OnClickButtonGenerateList(MouseEventArgs e)
         {
-
         }
-
 
         private void MakeSubnetInfo()
         {
@@ -117,11 +103,6 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
                 SubnetInfo = null;
                 _isButtonDisabled = true;
             }
-
-            //if (SubnetInfoChanged.HasDelegate)
-            //{
-            //    SubnetInfoChanged.InvokeAsync(SubnetInfo);
-            //}
         }
     }
 }
