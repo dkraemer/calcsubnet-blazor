@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Watch Include="wwwroot\css\*.css" />
+    <Watch Include="wwwroot\index.html" />
   </ItemGroup>
 
 </Project>
