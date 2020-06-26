@@ -3,6 +3,15 @@
 // Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 
 const gulp = require('gulp');
+const exec = require('child_process').exec;
+const moment = require('moment');
+const fs = require('fs');
+
+const tmpPublishDir = 'bin/publish';
+const tmpPublishWwwDir = tmpPublishDir + '/wwwroot';
+const tmpPublishFiles = tmpPublishWwwDir + '/**/*';
+const publishDir = '../../calcsubnet-site';
+const noJekyllFile = publishDir + '/.nojekyll';
 
 const vendorCss = [
     'node_modules/bootstrap/dist/css/bootstrap.css',
@@ -20,28 +29,64 @@ const vendorJs = [
 ];
 
 const vendorWebfonts = [
-    'node_modules/@fortawesome/fontawesome-free/webfonts/*'
+    'node_modules/@fortawesome/fontawesome-free/webfonts/*.woff*'
 ];
 
-gulp.task('copy-vendor-css', () => {
-    return gulp.src(vendorCss)
-        .pipe(gulp.dest('wwwroot/lib/css'));
-});
+const handleOutput = function(error, stdout, stderr) {
+    if (error) {
+        console.error(error.message);
+        return;
+    }
+    if (stderr) {
+        console.error(stderr);
+        return;
+    }
+    console.log(stdout);
+};
 
-gulp.task('copy-vendor-img', () => {
-    return gulp.src(vendorImg)
-        .pipe(gulp.dest('wwwroot/lib/img'));
-});
+const dotnet = function(command) {
+    return exec(`dotnet ${command}`, handleOutput);
+};
 
-gulp.task('copy-vendor-js', () => {
-    return gulp.src(vendorJs)
-        .pipe(gulp.dest('wwwroot/lib/js'));
-});
+gulp.task('copy-vendor-css',
+    () => {
+        return gulp.src(vendorCss)
+            .pipe(gulp.dest('wwwroot/lib/css'));
+    });
 
-gulp.task('copy-vendor-webfonts', () => {
-    return gulp.src(vendorWebfonts)
-        .pipe(gulp.dest('wwwroot/lib/webfonts'));
-});
+gulp.task('copy-vendor-img',
+    () => {
+        return gulp.src(vendorImg)
+            .pipe(gulp.dest('wwwroot/lib/img'));
+    });
+
+gulp.task('copy-vendor-js',
+    () => {
+        return gulp.src(vendorJs)
+            .pipe(gulp.dest('wwwroot/lib/js'));
+    });
+
+gulp.task('copy-vendor-webfonts',
+    () => {
+        return gulp.src(vendorWebfonts)
+            .pipe(gulp.dest('wwwroot/lib/webfonts'));
+    });
+
+gulp.task('dotnet-publish', () => dotnet(`publish -c Release -o ${tmpPublishDir}`));
+
+gulp.task('copy-published',
+    () => {
+        return gulp.src(tmpPublishFiles)
+            .pipe(gulp.dest(publishDir));
+    });
+
+
+var timestamp = moment().format();
+gulp.task('create-nojekyll-file',
+    function(cb) {
+        fs.writeFile(noJekyllFile, timestamp, cb);
+    });
 
 gulp.task('copy-vendor', gulp.parallel('copy-vendor-css', 'copy-vendor-js', 'copy-vendor-webfonts'));
+gulp.task('publish', gulp.series('dotnet-publish', 'copy-published', 'create-nojekyll-file'));
 gulp.task('default', gulp.series('copy-vendor'));
