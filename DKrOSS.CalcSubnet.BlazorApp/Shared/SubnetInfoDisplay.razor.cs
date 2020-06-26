@@ -2,9 +2,9 @@
 // All rights reserved.
 // Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/LICENSE)
 
-using Microsoft.AspNetCore.Components;
 using System;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace DKrOSS.CalcSubnet.BlazorApp.Shared
 {
@@ -12,6 +12,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
     {
         private IpAddress _ipAddress;
         private SubnetMask _subnetMask;
+        private bool _isButtonDisabled = true;
 
         [Parameter]
         public IpAddress IpAddress
@@ -19,7 +20,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
             get => _ipAddress;
             set
             {
-                if(value == _ipAddress)
+                if (value == _ipAddress)
                 {
                     return;
                 }
@@ -35,7 +36,7 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
             get => _subnetMask;
             set
             {
-                if(value == _subnetMask)
+                if (value == _subnetMask)
                 {
                     return;
                 }
@@ -57,20 +58,25 @@ namespace DKrOSS.CalcSubnet.BlazorApp.Shared
         [Parameter]
         public EventCallback<SubnetInfo> SubnetInfoChanged { get; set; }
 
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClickButtonGenerateList { get; set; }
+
         private void MakeSubnetInfo()
         {
             try
             {
                 SubnetInfo = new SubnetInfo(IpAddress, SubnetMask);
+                _isButtonDisabled = false;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 SubnetInfo = null;
+                _isButtonDisabled = true;
             }
 
             if (SubnetInfoChanged.HasDelegate)
             {
-                   SubnetInfoChanged.InvokeAsync(SubnetInfo);
+                SubnetInfoChanged.InvokeAsync(SubnetInfo);
             }
         }
     }

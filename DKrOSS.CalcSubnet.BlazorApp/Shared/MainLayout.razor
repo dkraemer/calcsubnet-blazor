@@ -6,12 +6,17 @@ Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/
 
 @inherits LayoutComponentBase
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-center">
-        <SubnetForm @bind-IpAddress="_ipAddress" @bind-SubnetMask="_subnetMask"/>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-lg-center">
+            <SubnetForm @bind-IpAddress="_ipAddress" @bind-SubnetMask="_subnetMask" />
+        </div>
+        <div class="mb-2"></div>
+        <div class="d-flex justify-content-lg-center">
+            <SubnetInfoDisplay @bind-IpAddress="_ipAddress" @bind-SubnetMask="_subnetMask" @bind-SubnetInfo="_subnetInfo" OnClickButtonGenerateList="ShowMessage"/>
+        </div>
+        <div class="mb-2"></div>
+        <div class="d-flex justify-content-lg-center">
+            <span class="display-4">@_message</span>
+        </div>
+
     </div>
-    <div class="mb-2"></div>
-    <div class="d-flex justify-content-center">
-        <SubnetInfoDisplay @bind-IpAddress="_ipAddress" @bind-SubnetMask="_subnetMask" @bind-SubnetInfo="_subnetInfo"/>
-    </div>
-</div>

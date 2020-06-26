@@ -30,5 +30,13 @@ Licensed under BSD-3-clause (https://github.com/dkraemer/calcsubnet/blob/master/
                 <input id="sid-broadcast-address" class="form-control" type="text" value="@SubnetInfo?.BroadcastAddress" readonly />
             </div>
         </div>
+        <div class="col-auto">
+            <label for="sid-btn-generate-list">&nbsp;</label>
+            <div class="input-group">
+                <button id="sid-btn-generate-list" class="btn btn-outline-primary" type="button" @onclick="OnClickButtonGenerateList"  disabled="@_isButtonDisabled">
+                    <span class="fa fa-list"></span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
