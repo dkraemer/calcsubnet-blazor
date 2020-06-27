@@ -6,12 +6,17 @@ const gulp = require('gulp');
 const exec = require('child_process').exec;
 const moment = require('moment');
 const fs = require('fs');
+const del = require('del');
 
 const tmpPublishDir = 'bin/publish';
 const tmpPublishWwwDir = tmpPublishDir + '/wwwroot';
 const tmpPublishFiles = tmpPublishWwwDir + '/**/*';
 const publishDir = '../../calcsubnet-site';
 const noJekyllFile = publishDir + '/.nojekyll';
+const cNameFile = publishDir + '/CNAME';
+const cNameFileContent = 'calcsub.net';
+const gitAttributesFile = publishDir + '/.gitattributes';
+const gitAttributesFileContent = '* binary';
 
 const vendorCss = [
     'node_modules/bootstrap/dist/css/bootstrap.css',
@@ -82,11 +87,13 @@ gulp.task('copy-published',
 
 
 var timestamp = moment().format();
-gulp.task('create-nojekyll-file',
+gulp.task('create-publish-files',
     function(cb) {
         fs.writeFile(noJekyllFile, timestamp, cb);
+        fs.writeFile(cNameFile, cNameFileContent, cb);
+        fs.writeFile(gitAttributesFile, gitAttributesFileContent, cb);
     });
 
 gulp.task('copy-vendor', gulp.parallel('copy-vendor-css', 'copy-vendor-js', 'copy-vendor-webfonts'));
-gulp.task('publish', gulp.series('dotnet-publish', 'copy-published', 'create-nojekyll-file'));
+gulp.task('publish', gulp.series('dotnet-publish', 'copy-published', 'create-publish-files'));
 gulp.task('default', gulp.series('copy-vendor'));
